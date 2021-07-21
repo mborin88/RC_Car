@@ -10,4 +10,7 @@ upload: $(PKG).c
 		avr-gcc $(CFLAGS) $(PKG).c -o $(PKG).elf
 		avr-objcopy $(OFLAGS) $(PKG).elf $(PKG).hex
 		avrdude -c usbasp -p m644p -U flash:w:$(PKG).hex
-		
+
+clean: 
+		del $(PKG).elf
+		del $(PKG).hex
