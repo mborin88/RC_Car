@@ -5,11 +5,11 @@
 
 int main(void){
 	
-	init_debug_uart0();
+	init_uart();
 	DDRB |= _BV(PB7);
 	uint8_t rec = 0;
 	while(1){
-		rec = ugetchar0();
+		rec = rx();
 		if(rec>53) PORTB |= _BV(PB7);
 		else if(rec<=53) PORTB &= ~_BV(PB7);
 	}

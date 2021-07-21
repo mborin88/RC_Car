@@ -28,9 +28,9 @@ uint8_t rx()
 }
 
 void init_uart(void) { /* 8N1 */
-	UBRR0H = UBRRH_VALUE;
-	UBRR0L = UBRRL_VALUE;
-	UCSR0A = USE_2X << U2X0;
+	UBRR0H = (F_CPU/(DEBUG_BAUD*16L)-1) >> 8;
+	UBRR0L = (F_CPU/(DEBUG_BAUD*16L)-1);
+	//UCSR0A = USE_2X << U2X0;
 	UCSR0B = _BV(RXEN0) | _BV(TXEN0);
 	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01); 
 }

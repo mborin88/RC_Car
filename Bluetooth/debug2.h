@@ -5,7 +5,6 @@
  * Author : Morten
  */ 
 
- 
 
 #include <stdio.h>
 #include <avr/io.h>
@@ -29,43 +28,32 @@ void USART_init(unsigned int ubrr)
     //set BAUD rate UBRR 103 for 19200.
     UBRR0H=(unsigned char)(ubrr>>8);
     UBRR0L=(unsigned char)ubrr;
+	
+	UBRR0H = (F_CPU/(DEBUG_BAUD*16L)-1) >> 8;
+	UBRR0L = (F_CPU/(DEBUG_BAUD*16L)-1);
+	UCSR0B = _BV(RXEN0) | _BV(TXEN0);
+	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01);
+	
+	UCSR0B|=(1<<RXEN0);
 }
 
 void USART_Transmit(char tx)
 {
-    //venter på tom transmitter buffer
+    //waiting for empty transmitter buffer
     while(!(UCSR0A &(1<<UDRE0)));
-    //putter data ind i buffer og sender data
+    //puts data into buffer and sends data
     UDR0=tx;
     
 }
 
-char USART_Receive(void)
+uint8_t USART_Receive(void)
 {
-    //venter på at data bliver modtaget
+    //waiting for data to be received
     while(!(UCSR0A & (1<<RXC0)));
-    //hent og retuner modtaget data fra bufferen
+    //retrieve and return received data from the buffer
     return UDR0;
     
 }
-
-//transmitter en string
-void USART_Send_String(char *ptr)
-{
-    //kalder transmitfunktionen for hver byte i ptr
-    while(*ptr !=0x00)
-    {USART_Transmit(*ptr);
-    ptr++;}
-    
-}
-
- 
-
- 
-
- 
-
-char ptr[]="Hej med dig!"; //string der skal sendes
 
 int main(void)
 {
