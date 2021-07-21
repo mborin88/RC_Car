@@ -21,28 +21,18 @@ int uputchar0(char c, FILE *stream)
 	return c;
 }
 
-int ugetchar0(FILE *stream)
+uint8_t rx()
 {
 	while(!(UCSR0A & _BV(RXC0)));
 	return UDR0;
 }
 
-void init_debug_uart0(void)
-{
-	/* Configure UART0 baud rate, one start bit, 8-bit, no parity and one stop bit */
-	UBRR0H = (F_CPU/(DEBUG_BAUD*16L)-1) >> 8;
-	UBRR0L = (F_CPU/(DEBUG_BAUD*16L)-1);
+void init_uart(void) { /* 8N1 */
+	UBRR0H = UBRRH_VALUE;
+	UBRR0L = UBRRL_VALUE;
+	UCSR0A = USE_2X << U2X0;
 	UCSR0B = _BV(RXEN0) | _BV(TXEN0);
-	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01);
-
-	/* Setup new streams for input and output */
-	static FILE uout = FDEV_SETUP_STREAM(uputchar0, NULL, _FDEV_SETUP_WRITE);
-	static FILE uin = FDEV_SETUP_STREAM(NULL, ugetchar0, _FDEV_SETUP_READ);
-
-	/* Redirect all standard streams to UART0 */
-	stdout = &uout;
-	stderr = &uout;
-	stdin = &uin;
+	UCSR0C = _BV(UCSZ00) | _BV(UCSZ01); 
 }
 
 
