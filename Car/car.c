@@ -14,7 +14,7 @@ void initMotor(){ //Initialise D0  D1, D2 as ouputs
 
 }
 
-void forwardCar(){ //Initialise D0  D1, D2 as ouputs
+void forwardCar(){ 
 	PORTA |= _BV(0);
 	PORTA &= ~_BV(1);
 	PORTA |= _BV(2);
@@ -22,12 +22,12 @@ void forwardCar(){ //Initialise D0  D1, D2 as ouputs
 	
 	PORTC |= _BV(0);
 	PORTC &= ~_BV(1);
-	PORTC |= _BV(2);
-	PORTC &= ~_BV(3);
+	PORTC |= _BV(6);
+	PORTC &= ~_BV(7);
 
 }
 
-void stopCar(){ //Initialise D0  D1, D2 as ouputs
+void stopCar(){ 
 	PORTA &= ~_BV(0);
 	PORTA &= ~_BV(1);
 	PORTA &= ~_BV(2);
@@ -35,15 +35,24 @@ void stopCar(){ //Initialise D0  D1, D2 as ouputs
 	
 	PORTC &= ~_BV(0);
 	PORTC &= ~_BV(1);
-	PORTC &= ~_BV(2);
-	PORTC &= ~_BV(3);
+	PORTC &= ~_BV(6);
+	PORTC &= ~_BV(7);
 
 }
 
 
 int main(){
 	initMotor();
+	init_uart();
+	DDRB |= _BV(PB7);
+	uint8_t rec = 0;
 	while(1){
-		forwardCar(); 
+		rec = rx();
+		if(rec==53){
+			forwardCar();
+		}
+		else if(rec==54) {
+			stopCar();
+		}
 	}
 }
