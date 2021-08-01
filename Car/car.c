@@ -27,6 +27,31 @@ void forwardCar(){
 
 }
 
+void pivotLeft(){ 
+	PORTA |= _BV(0);
+	PORTA &= ~_BV(1);
+	PORTA |= _BV(2);
+	PORTA &= ~_BV(3);
+	
+	PORTC &= ~_BV(0);
+	PORTC |= _BV(1);
+	PORTC &= ~ _BV(6);
+	PORTC |= _BV(7);
+
+}
+
+void pivotRight(){
+	PORTA &= ~_BV(0);
+	PORTA |= _BV(1);
+	PORTA &= ~ _BV(6);
+	PORTA |= _BV(7);
+	
+	PORTC |= _BV(0);
+	PORTC &= ~_BV(1);
+	PORTC |= _BV(2);
+	PORTC &= ~_BV(3);
+}
+
 void stopCar(){ 
 	PORTA &= ~_BV(0);
 	PORTA &= ~_BV(1);
@@ -48,11 +73,9 @@ int main(){
 	uint8_t rec = 0;
 	while(1){
 		rec = rx();
-		if(rec==53){
-			forwardCar();
-		}
-		else if(rec==54) {
-			stopCar();
-		}
+		if(rec==53)forwardCar();
+		else if(rec==54) stopCar();
+		else if (rec==55) pivotLeft();
+		else if (rec==56) pivotRight();
 	}
 }
