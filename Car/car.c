@@ -17,39 +17,52 @@ void initMotor(){ //Initialise D0  D1, D2 as ouputs
 void forwardCar(){ 
 	PORTA |= _BV(0);
 	PORTA &= ~_BV(1);
-	PORTA |= _BV(2);
-	PORTA &= ~_BV(3);
+	PORTA &= ~_BV(2);
+	PORTA |= _BV(3);
 	
 	PORTC |= _BV(0);
 	PORTC &= ~_BV(1);
-	PORTC |= _BV(6);
-	PORTC &= ~_BV(7);
-
+	PORTC &= ~_BV(6);
+	PORTC |= _BV(7);
+	
 }
 
-void pivotLeft(){ 
-	PORTA |= _BV(0);
-	PORTA &= ~_BV(1);
+void reverseCar(){ 
+	PORTA &= ~_BV(0);
+	PORTA |= _BV(1);
 	PORTA |= _BV(2);
 	PORTA &= ~_BV(3);
 	
 	PORTC &= ~_BV(0);
 	PORTC |= _BV(1);
-	PORTC &= ~ _BV(6);
-	PORTC |= _BV(7);
-
+	PORTC |= _BV(6);
+	PORTC &= ~_BV(7);
+	
 }
 
-void pivotRight(){
+void pivotLeft(){ 
+	PORTA |= _BV(0);
+	PORTA &= ~_BV(1);
+	PORTA &= ~_BV(2);
+	PORTA |= _BV(3);
+	
+	PORTC &= ~_BV(0);
+	PORTC |= _BV(1);
+	PORTC |= _BV(6);
+	PORTC &= ~_BV(7);
+}
+
+void pivotRight(){ 
 	PORTA &= ~_BV(0);
 	PORTA |= _BV(1);
-	PORTA &= ~ _BV(6);
-	PORTA |= _BV(7);
+	PORTA |= _BV(2);
+	PORTA &= ~_BV(3);
 	
 	PORTC |= _BV(0);
 	PORTC &= ~_BV(1);
-	PORTC |= _BV(2);
-	PORTC &= ~_BV(3);
+	PORTC &= ~_BV(6);
+	PORTC |= _BV(7);
+
 }
 
 void stopCar(){ 
@@ -72,10 +85,14 @@ int main(){
 	DDRB |= _BV(PB7);
 	uint8_t rec = 0;
 	while(1){
+		rec = 0;
 		rec = rx();
-		if(rec==53)forwardCar();
-		else if(rec==54) stopCar();
-		else if (rec==55) pivotLeft();
-		else if (rec==56) pivotRight();
+		if(rec==48)forwardCar();
+		else if (rec==49) reverseCar();
+		else if(rec==50) stopCar();
+		else if (rec==51) pivotLeft();
+		else if (rec==52) pivotRight();
+		
+
 	}
 }
